@@ -147,8 +147,33 @@ async function deleteUser( id ) {
     try{
         result = await mariadb.query( 'DELETE FROM usuario WHERE id = ?',
             { replacements: [ id ], type: mariadb.QueryTypes.DELETE } );
-    }catch( err ){
+    } catch( err ){
         return message( 400, false, 'Error al Eliminar usuario' );
+    }
+    return message( 200, true, 'Eliminado Correctamente' );
+}
+
+async function addFav( data ) {
+    let result, metadata;
+    try{
+        [ result, metadata ] = await mariadb.query( 'INSERT INTO usuario_plato ( usuario_id, plato_id ) values( ?, ? )',
+                            { replacements: Object.values( data ), type: mariadb.QueryTypes.INSERT } );
+    } catch( err ) {
+        return message( 400, false, 'Error al guardar favoritos' );
+    }
+    if( metadata === 1 ) {
+        return message( 200, true, 'Agregado a favoritos ' );
+    }
+    return message( 400, false, 'Error en favoritos' );
+}
+
+async function deleteFav( usuario, plato ) {
+    let result;
+    try{
+        result = await mariadb.query( 'DELETE FROM usuario_plato WHERE usuario_id = ? && plato_id = ?',
+            { replacements: [ usuario, plato ], type: mariadb.QueryTypes.DELETE } );
+    } catch( err ) {
+        return message( 400, false, 'Error al Eliminar favorito' );
     }
     return message( 200, true, 'Eliminado Correctamente' );
 }
@@ -214,5 +239,7 @@ module.exports = {
     createToken,
     findById,
     updateUser,
-    deleteUser
+    deleteUser,
+    addFav,
+    deleteFav
 }

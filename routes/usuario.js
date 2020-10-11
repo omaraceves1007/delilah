@@ -33,5 +33,18 @@ router.delete( '/:id', token.checkToken, async ( req, res ) => {
     res.send( result );
 } );
 
+router.post( '/favoritos', token.checkToken, async ( req, res ) => {
+    const info = req.body;
+    const result = await usuarioCtrlr.addFav( info );
+    res.send( result );
+} );
+
+
+router.delete( '/favoritos/:usuario_id/:plato_id', token.checkToken, async ( req, res ) => {
+    const usuario = parseInt( req.params.usuario_id );
+    const plato = parseInt( req.params.plato_id );
+    const result = await usuarioCtrlr.deleteFav( usuario, plato );
+    res.send( result );
+} );
 
 module.exports = router;

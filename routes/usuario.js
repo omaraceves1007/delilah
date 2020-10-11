@@ -1,7 +1,7 @@
 const express = require( 'express' );
 const mariadb = require( '../conexion' );
 const usuarioCtrlr = require( '../controllers/usuario' );
-const token = require( './middlewares/token' ); 
+const token = require( './middlewares/token' );
 const validate = require( './middlewares/validators' );
 
 const router = express.Router();

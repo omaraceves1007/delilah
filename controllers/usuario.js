@@ -3,8 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jwt-simple");
 const dotenv = require( 'dotenv' ).config();
 const moment = require( 'moment' );
-const rol = require( '../routes/middlewares/rol' );
-
 
 async function createUser( user ) {
     user.password = bcrypt.hashSync( user.password, 10);
@@ -72,10 +70,16 @@ async function findId( user ) {
 async function findBy( user ) {
     let igual;
     const params = [ user.email ];
-    const exist = await mariadb.query('SELECT id, username, fullname, email, telefono, password FROM usuario WHERE email = ?',
-                    { replacements: params, type: mariadb.QueryTypes.SELECT });
-    igual = bcrypt.compareSync( user.password, exist[0].password );
-    if( exist.length > 0 && igual) {
+    let exist;
+    try{
+        exist = await mariadb.query('SELECT id, username, fullname, email, telefono, password FROM usuario WHERE email = ?',
+                        { replacements: params, type: mariadb.QueryTypes.SELECT });
+    }  catch( err ) {
+        return message( 400, false, 'Error al actualizar' );
+    }
+    if( exist.length > 0 ) {
+        igual = bcrypt.compareSync( user.password, exist[0].password );
+        if( igual === true ) {
             delete exist[0].password;
             const rol = await findRol( exist[0].id );
             if( rol ) {
@@ -83,6 +87,7 @@ async function findBy( user ) {
             }
             const token = createToken( exist[0] );
             return { status: 200, ok: true, token };
+        }
     }
     return { status: 200, ok: true, message: 'Credenciales incorrectas'};
 }
@@ -115,6 +120,9 @@ async function findById( id ) {
 }
 
 async function updateUser( id, info ) {
+    if( info.password ) {
+        info.password = bcrypt.hashSync( info.password, 10);
+    }
     const keys = Object.keys( info );
     const values = Object.values( info );
     let datas = [];
@@ -123,15 +131,26 @@ async function updateUser( id, info ) {
         datas.push( `${keys[i]}='${values[i]}'` );
     }
     try{
-        [result, metadata ] = await mariadb.query(`UPDATE usuario set ${ datas.toString() } WHERE id=?`,
+        [result, metadata ] = await mariadb.query(`UPDATE usuario set ${ datas.toString() } WHERE id = ?`,
                                         { replacements: [ id ], type: mariadb.QueryTypes.UPDATE } );
     } catch( err ) {
-        return message( 400, false, 'Error al actualizar' );    
+        return message( 400, false, 'Error al actualizar usuario' );
     }
     if( metadata === 1 ) {
         return message( 200, true, 'Usuario Actualizado correctamente' );
     }
-    return message( 400, false, 'Error al actualizar' );
+    return message( 400, false, 'Error al actualizar usuario' );
+}
+
+async function deleteUser( id ) {
+    let result;
+    try{
+        result = await mariadb.query( 'DELETE FROM usuario WHERE id = ?',
+            { replacements: [ id ], type: mariadb.QueryTypes.DELETE } );
+    }catch( err ){
+        return message( 400, false, 'Error al Eliminar usuario' );
+    }
+    return message( 200, true, 'Eliminado Correctamente' );
 }
 
 function onSuccess( user ) {
@@ -194,5 +213,6 @@ module.exports = {
     findBy,
     createToken,
     findById,
-    updateUser
+    updateUser,
+    deleteUser
 }

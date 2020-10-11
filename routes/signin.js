@@ -9,8 +9,7 @@ router.post( '/', validator.userNewValidate, async ( req, res ) => {
     userController.createUser( usuario ).then( message => {
         res.send( message );
     } ).catch( err => {
-        res.send( userController.onError()
-        );
+        res.send( userController.onError() );
     }) ;
 } );
 

@@ -20,15 +20,17 @@ router.get( '/:id', token.checkToken, async (req , res ) => {
     res.send( message );
 });
 
-router.put( '/:id', token.checkToken, validate.userNewValidate, async ( req, res ) => {
+router.put( '/:id', [token.checkToken, validate.updateUser], async ( req, res ) => {
     const ID = parseInt( req.params.id );
     const data = req.body;
     const result = await usuarioCtrlr.updateUser( ID, data );
     res.send( result );
 } );
 
-router.delete( '/:id', ( req, res ) => {
-    res.send( 'Elimina usuarios' );
+router.delete( '/:id', token.checkToken, async ( req, res ) => {
+    const ID = parseInt( req.params.id );
+    const result = await usuarioCtrlr.deleteUser( ID );
+    res.send( result );
 } );
 
 

@@ -44,6 +44,78 @@ async function savePedido( pedido ) {
     return message( 500, false, 'Error al guardar pedido' );
 }
 
+async function getPedido( id ) {
+    try{
+        const exist = await mariadb.query( 'SELECT id, usuario_id, direccion, pago, hora, tipo_pago, estado FROM pedido WHERE id = ?',
+                        { replacements: [ id ], type: mariadb.QueryTypes.SELECT } );
+        const platos = await mariadb.query( `SELECT pp.cantidad, p.nombre, p.precio, p.img FROM pedido_plato pp 
+                                            INNER JOIN plato p ON pp.plato_id = p.id 
+                                            WHERE pp.pedido_id = ?`,
+                        { replacements: [ id ], type: mariadb.QueryTypes.SELECT } );
+        if( exist.length > 0 && platos.length > 0 ) {
+            const pedido = { ...exist[0], platos: platos};
+            return message( 200, true, pedido );
+        }
+    } catch( err ) {
+        return ( 500, false, 'Error al realizar operacion' );
+    }
+    return message( 400, false, 'No se encontro pedido');
+}
+
+async function updatePedido( id, pedido ) {
+    pedido.hora = moment( new Date( pedido.hora ) ).format( 'YYYY-MM-DD HH:mm:ss');
+    let pedidoRes, pedidoMeta, pedPlaRes, pedPlaMe, resultArr=[];
+    let keys = Object.keys( pedido );
+    let values = Object.values( pedido );
+    let platos = pedido.platos;
+    let pedido_d = [];
+    let platos_d = [];
+    keys.pop();
+    values.pop();
+    keys.forEach( ( key, i ) => {
+        pedido_d.push( `${key}='${values[i]}'` );
+    } );
+    platos.forEach( ( plt, i ) => {
+        platos_d.push( `cantidad='${plt.cantidad}'` );
+    } );
+    console.log(keys,values, platos,pedido_d.toString(), platos_d);
+    try {
+        [ pedidoRes, pedidoMeta ] = await mariadb.query( `UPDATE pedido SET ${pedido_d.toString()} WHERE id = ?` , 
+                                            { replacements: [ id ], type: mariadb.QueryTypes.UPDATE } );
+    } catch( e ) {console.log(e)
+        return message( 400, false, 'Error al Actualizar pedido' );
+    }
+    if( pedidoMeta === 1 ) {console.log('actualizo')
+        await platos_d.forEach( async ( plato, index ) => {
+            try{
+                [ pedPlaRes, pedPlaMe ] = await mariadb.query( `UPDATE pedido_plato SET ${plato} WHERE pedido_id = ?`,
+                                                    { replacements: [ id ], type: mariadb.QueryTypes.UPDATE } );
+            } catch( e ){
+                console.log(e)
+                return message( 400, false, 'Error al guardar pedido-plato: ' + index );
+            }
+            if( pedPlaMe === 1 ) {
+                resultArr.push( pedPlaMe );
+            } else {
+                return message( 400, false, 'Error al guardar pedido-plato: ' + index );
+            }
+        } );
+        return message( 200, true, 'Pedido guardado correctamente' );
+    }
+    return message( 500, false, 'Error al guardar pedido' );
+}
+
+async function deletePedido( id ) {
+    let result;
+    try{
+        result = await mariadb.query( 'DELETE FROM pedido WHERE id = ?',
+            { replacements: [ id ], type: mariadb.QueryTypes.DELETE } );
+    }catch( err ){
+        return message( 400, false, 'Error al Eliminar pedido' );
+    }
+    return message( 200, true, 'Eliminado Correctamente' );
+}
+
 function message( status, ok , info ) {
     return {
         status,
@@ -54,5 +126,8 @@ function message( status, ok , info ) {
 
 module.exports = {
     getAll,
-    savePedido
+    savePedido,
+    getPedido,
+    updatePedido,
+    deletePedido
 }

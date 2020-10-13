@@ -32,7 +32,7 @@ async function updatePlato( plato, id ) {
     let result, metadata;
     for( let i = 0; i < keys.length; i++ ) {
         datas.push( `${keys[i]}='${values[i]}'` );
-    }console.log( datas.toString(), )
+    }
     try{
         [result, metadata ] = await mariadb.query(`UPDATE plato set ${ datas.toString() } WHERE id = ?`,
                                         { replacements: [ id ], type: mariadb.QueryTypes.UPDATE } );

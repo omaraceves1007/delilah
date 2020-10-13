@@ -12,8 +12,10 @@ router.get( '/', [ token.checkToken, rol.checkAdmin ], async ( req, res ) => {
     res.send( result );
 } );
 
-router.get( '/:id', async ( req, res ) => {
-    res.send( 'Un Pedido' );
+router.get( '/:id', token.checkToken, async ( req, res ) => {
+    const id = parseInt( req.params.id );
+    const result = await pedidoCtrlr.getPedido( id );
+    res.send( result );
 } );
 
 router.post( '/', async ( req, res ) => {
@@ -22,12 +24,17 @@ router.post( '/', async ( req, res ) => {
     res.send( result );
 } );
 
-router.put( '/:id', async ( req, res ) => {
-    res.send( 'Actualiza Pedido' );
+router.put( '/:id', token.checkToken, async ( req, res ) => {
+    const id = req.params.id;
+    const pedido = req.body;
+    const result = await pedidoCtrlr.updatePedido( id, pedido );
+    res.send( result );
 } );
 
-router.delete( '/:id', async ( req, res ) => {
-    res.send( 'Elimina Pedido' );
+router.delete( '/:id', token.checkToken, async ( req, res ) => {
+    const id = req.params.id;
+    const result = await pedidoCtrlr.deletePedido( id );
+    res.send( result );
 } );
 
 

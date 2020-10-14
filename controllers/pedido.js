@@ -85,7 +85,7 @@ async function updatePedido( id, pedido ) {
     } catch( e ) {console.log(e)
         return message( 400, false, 'Error al Actualizar pedido' );
     }
-    if( pedidoMeta === 1 ) {console.log('actualizo')
+    if( pedidoMeta === 1 ) {
         await platos_d.forEach( async ( plato, index ) => {
             try{
                 [ pedPlaRes, pedPlaMe ] = await mariadb.query( `UPDATE pedido_plato SET ${plato} WHERE pedido_id = ?`,

@@ -8,7 +8,7 @@ const router = express.Router();
 
 
 router.get( '/', [ token.checkToken, rol.checkAdmin ], async ( req, res ) => {
-    const result = pedidoCtrlr.getAll();
+    const result = await pedidoCtrlr.getAll();
     res.send( result );
 } );
 
@@ -18,13 +18,13 @@ router.get( '/:id', token.checkToken, async ( req, res ) => {
     res.send( result );
 } );
 
-router.post( '/', async ( req, res ) => {
+router.post( '/', [ token.checkToken, validate.existPedido, validate.notNullPedido ],async ( req, res ) => {
     const pedido = req.body;
     const result = await pedidoCtrlr.savePedido( pedido );
     res.send( result );
 } );
 
-router.put( '/:id', token.checkToken, async ( req, res ) => {
+router.put( '/:id', [ token.checkToken, validate.notNullPedido ], async ( req, res ) => {
     const id = req.params.id;
     const pedido = req.body;
     const result = await pedidoCtrlr.updatePedido( id, pedido );

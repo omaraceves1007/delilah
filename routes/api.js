@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const cors = require( "cors" );
 // const middlewares = require("./middlewares");
 
 // import Routes
@@ -8,6 +9,8 @@ const userRoutes = require( './usuario' );
 const orderRoutes = require( './pedido' );
 const dishRoutes = require( './platillo' );
 
+//enabled cors for swagger
+router.use( cors() );
 
 // Add Routes to aplication
 router.use( '/pedidos', orderRoutes );

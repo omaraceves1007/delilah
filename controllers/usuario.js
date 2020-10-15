@@ -116,7 +116,7 @@ async function findById( id ) {
     if( exist.length > 0 ) {
             return { status: 200, ok: true, usuario: exist[0] };
     }
-    return { status: 200, ok: true, message: 'Usuario no existe'};
+    return { status: 200, ok: false, message: 'Usuario no existe'};
 }
 
 async function updateUser( id, info ) {

@@ -3,15 +3,13 @@ const mariadb = require( '../conexion' );
 const usuarioCtrlr = require( '../controllers/usuario' );
 const token = require( './middlewares/token' );
 const validate = require( './middlewares/validators' );
+const rol = require( './middlewares/rol' );
 
 const router = express.Router();
 
-router.get( '/', ( req, res ) => {
-    mariadb.query( 'SELECT * FROM usuario' , { type: mariadb.QueryTypes.SELECT } )
-    .then( usuarios => {
-        res.send( usuarios );
-    } )
-    .catch( console.log );
+router.get( '/', [token.checkToken, rol.checkAdmin] , async ( req, res ) => {
+    const result = await usuarioCtrlr.getAll();
+    res.send( result );
 } );
 
 router.get( '/:id', token.checkToken, async (req , res ) => {

@@ -27,7 +27,6 @@ async function newPlato( plato ) {
 async function updatePlato( plato, id ) {
     const keys = Object.keys( plato );
     const values = Object.values( plato );
-    console.log(keys, values);
     let datas = [];
     let result, metadata;
     for( let i = 0; i < keys.length; i++ ) {

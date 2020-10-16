@@ -78,7 +78,6 @@ async function updatePedido( id, pedido ) {
     platos.forEach( ( plt, i ) => {
         platos_d.push( `cantidad='${plt.cantidad}'` );
     } );
-    console.log(keys,values, platos,pedido_d.toString(), platos_d);
     try {
         [ pedidoRes, pedidoMeta ] = await mariadb.query( `UPDATE pedido SET ${pedido_d.toString()} WHERE id = ?` , 
                                             { replacements: [ id ], type: mariadb.QueryTypes.UPDATE } );

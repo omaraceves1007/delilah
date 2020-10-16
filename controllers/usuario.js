@@ -4,6 +4,24 @@ const jwt = require("jwt-simple");
 const dotenv = require( 'dotenv' ).config();
 const moment = require( 'moment' );
 
+async function getAll() {
+    let usuarios;
+    try{
+        usuarios = await mariadb.query( `SELECT u.id, u.username, u.fullname, u.email, u.telefono, r.descripcion as rol 
+                                                FROM usuario u 
+                                                INNER JOIN rol_usuario ru on u.id = ru.usuario_id
+                                                INNER JOIN rol r on ru.rol_id = r.id` ,
+                                                { type: mariadb.QueryTypes.SELECT } );
+    } catch( e ){
+        console.log(e);
+        return message( 400, false, 'Error al consultar' );
+    }
+    if( usuarios.length > 0 ) {
+        return { status: 200, ok: true, usuarios };
+    }
+    return { status: 200, ok: false, message: 'Sin usuarios'};
+}
+
 async function createUser( user ) {
     user.password = bcrypt.hashSync( user.password, 10);
     const users = await userExist(user)
@@ -233,6 +251,7 @@ const createToken = ( user ) => {
 }
 
 module.exports = {
+    getAll,
     createUser,
     onError,
     findBy,

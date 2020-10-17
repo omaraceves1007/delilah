@@ -47,7 +47,7 @@ create database delilah;
 Posteriormente ingresamos el siguiente comando para instalar la base de datos:
 
 ```
-mysql delilah < delilah.sql
+mysql -u root -p delilah < delilah.sql
 ```
 > Para que este comando funcione la terminal debe estar abierta en la carpeta db del repositorio, de lo contrario
 > es necesario colocar la ruta completa de la ubicación de archivo de la siquiente manera 

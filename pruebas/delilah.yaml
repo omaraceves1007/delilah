@@ -1,0 +1,747 @@
+swagger: "2.0"
+info:
+  description: "Ejemplos de peticiones a la API Delilah Restó"
+  version: "1.0.0"
+  title: "Swagger Delilah Restó"
+  termsOfService: ""
+  contact:
+    email: "manuel.acev07@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:3000"
+basePath: "/api"
+tags:
+- name: "usuarios"
+  description: "Operaciones de usuario"
+- name: "platos"
+  description: "Operaciones de platillo"
+- name: "pedidos"
+  description: "Operaciones de pedido"
+schemes:
+- "http"
+paths:
+  /login:
+    post:
+      tags:
+      - "usuarios"
+      summary: "Inicio de sesión"
+      description: "Inicio sesión de usuario"
+      operationId: "login"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "usuario"
+        description: "Usuario a validar"
+        required: true
+        schema:
+          $ref: "#/definitions/Login"
+      responses:
+        "400":
+          description: "Error "
+          schema:
+            $ref: "#/definitions/Response"
+        "200":
+          description: "Login exitoso"
+          schema:
+            $ref: "#/definitions/LoginInfo"
+  /signin:
+    post:
+      tags:
+      - "usuarios"
+      summary: "Registro de usuario"
+      description: "Registro de nuevo usuario, es necesario agregar 'admin': true al en el modelo para el correcto registro de usuario"
+      operationId: "singin"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "usuario"
+        description: "Usuario a validar"
+        required: true
+        schema:
+          $ref: "#/definitions/Usuario"
+      responses:
+        "400":
+          description: "Error"
+          schema:
+            $ref: "#/definitions/Response"
+        "200":
+          description: "Login exitoso"
+          schema:
+              $ref: "#/definitions/SignInfo"
+  /usuarios:
+   get:
+      tags:
+      - "usuarios"
+      summary: "Buscar todo"
+      description: "Obtener todos los usuarios"
+      operationId: "getAllUsuario"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      responses:
+        "200":
+          description: "Exito al obtener usuario"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              usuarios:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Usuario"
+        "400":
+          description: "Error  al obtener usuario"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              message:
+                type: "string"
+  /usuarios/{id}:
+    get:
+      tags:
+      - "usuarios"
+      summary: "Buscar usuario"
+      description: "Regresa un solo usuario"
+      operationId: "getUsuario"
+      produces:
+      - "application/json"
+      parameters: 
+        - name: "id"
+          in: "path"
+          description: "ID of pet to return"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      responses:
+        "200":
+          description: "Exito al obtener usuario"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              usuario:
+                $ref: "#/definitions/Usuario"
+        "400":
+          description: "Error  al obtener usuario"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              message:
+                type: "string"
+    put:
+      tags:
+      - "usuarios"
+      summary: "Actualiza usuario"
+      description: "Actualizar datos de usuario"
+      operationId: "updateUser"
+      produces:
+      - "application/json"
+      parameters: 
+        - name: "id"
+          in: "path"
+          description: "ID of pet to return"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+        - in: "body"
+          name: "body"
+          description: "Usuario a actualizar"
+          required: true
+          schema:
+            $ref: "#/definitions/Usuario"
+      responses:
+        "400":
+          description: "Error"
+          schema:
+            $ref: "#/definitions/Response"
+        "200":
+          description: "Actualizado exitosamente"
+          schema:
+            $ref: "#/definitions/Response"
+    delete:
+      tags:
+      - "usuarios"
+      summary: "Eliminar usuario"
+      description: "Eliminar usuario"
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters: 
+        - name: "id"
+          in: "path"
+          description: "ID de usuario a eliminar"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      responses:
+        "400":
+          description: "Error"
+          schema:
+            $ref: "#/definitions/Response"
+        "200":
+          description: "Eliminado"
+          schema:
+            $ref: "#/definitions/Response"
+  /usuarios/favoritos:
+    post:
+      tags:
+      - "usuarios"
+      summary: "Registro de favoritos de usuario"
+      description: "Registro platos favoritos de usuario"
+      operationId: "addFavoritos"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        description: "Token de acceso"
+        required: true
+        type: "string"
+        default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      - in: "body"
+        name: "favorito"
+        description: "Favorito a guardar"
+        required: true
+        schema:
+          $ref: "#/definitions/Favorito"
+      responses:
+        "400":
+          description: "Error"
+          schema:
+            $ref: "#/definitions/Response"
+        "200":
+          description: "Login exitoso"
+          schema:
+              $ref: "#/definitions/Response"
+  /usuarios/favoritos/{usuario_id}/{plato_id}:
+    delete:
+      tags:
+      - "usuarios"
+      summary: "Eliminar favorito"
+      description: "Eliminar favorito"
+      operationId: "deleteFavorito"
+      produces:
+      - "application/json"
+      parameters: 
+        - name: "usuario_id"
+          in: "path"
+          description: "ID de usuario a eliminar"
+          required: true
+          type: "integer"
+          format: "int32"
+        - name: "plato_id"
+          in: "path"
+          description: "ID de plato a eliminar"
+          required: true
+          type: "integer"
+          format: "int32"
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      responses:
+        "400":
+          description: "Error"
+          schema:
+            $ref: "#/definitions/Response"
+        "200":
+          description: "Eliminado"
+          schema:
+            $ref: "#/definitions/Response"
+  /platillos:
+   get:
+      tags:
+      - "platos"
+      summary: "Buscar todo"
+      description: "Obtener todos los platos"
+      operationId: "getAllPlatos"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      responses:
+        "200":
+          description: "Exito al obtener platos"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              usuarios:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Plato"
+        "400":
+          description: "Error  al obtener usuario"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              message:
+                type: "string"
+   post:
+      tags:
+      - "platos"
+      summary: "Nuevo Plato"
+      description: "Registrar un nuevo plato"
+      operationId: "savePlato"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+        - in: "body"
+          name: "body"
+          description: "Nuevo plato"
+          required: true
+          schema:
+            $ref: "#/definitions/Plato"
+      responses:
+        "200":
+          description: "Exito al guardar nuevo plato"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              message:
+                type: "string"
+        "400":
+          description: "Error  al guardar"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              message:
+                type: "string"
+  /platillos/{id}:
+    put:
+      tags:
+        - "platos"
+      summary: "Actualiza Plato"
+      description: "Actualiza plato"
+      operationId: "updatePlato"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID de plato"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+        - in: "body"
+          name: "plato"
+          description: "Modificar plato"
+          required: true
+          schema:
+            $ref: "#/definitions/Plato"
+      responses:
+        "200":
+          description: "Exito al guardar nuevo plato"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              message:
+                type: "string"
+        "400":
+          description: "Error  al guardar"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              message:
+                type: "string"
+    delete:
+      tags:
+      - "platos"
+      summary: "Eliminar plato"
+      description: "Eliminar plato"
+      operationId: "deletePlato"
+      produces:
+      - "application/json"
+      parameters: 
+        - name: "id"
+          in: "path"
+          description: "Id de plato a eliminar"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      responses:
+        "400":
+          description: "Error"
+          schema:
+            $ref: "#/definitions/Response"
+        "200":
+          description: "Eliminado"
+          schema:
+            $ref: "#/definitions/Response"
+  /pedidos:
+    get:
+      tags:
+      - "pedidos"
+      summary: "Buscar todo"
+      description: "Obtener todos los pedidos"
+      operationId: "getAllPedidos"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      responses:
+        "200":
+          description: "Exito al obtener platos"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              usuarios:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Pedido"
+        "400":
+          description: "Error  al obtener usuario"
+          schema:
+            type: "object"
+            properties:
+              status: 
+                type: "string"
+              ok: 
+                type: "boolean"
+              message:
+                type: "string"
+    post:
+        tags:
+        - "pedidos"
+        summary: "Nuevo Pedido"
+        description: "Registrar un nuevo pedido"
+        operationId: "savePedido"
+        consumes:
+        - "application/json"
+        produces:
+        - "application/json"
+        parameters:
+          - name: "authorization"
+            in: "header"
+            description: "Token de acceso"
+            required: true
+            type: "string"
+            default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+          - in: "body"
+            name: "Pedido"
+            description: "Nuevo pedido"
+            required: true
+            schema:
+              $ref: "#/definitions/Pedido"
+        responses:
+          "200":
+            description: "Exito al guardar nuevo pedido"
+            schema:
+              $ref: "#/definitions/Response"
+          "400":
+            description: "Error  al guardar"
+            schema:
+              $ref: "#/definitions/Response"  
+  /pedidos/{id}:
+    put:
+      tags:
+        - "pedidos"
+      summary: "Actualiza Pedido"
+      description: "Actualiza pedido"
+      operationId: "updatePedido"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "ID del pedido"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+        - in: "body"
+          name: "body"
+          description: "modificar pedido"
+          required: true
+          schema:
+            $ref: "#/definitions/Pedido"
+      responses:
+        "200":
+          description: "Exito al modificar pedido"
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: "Error  al guardar"
+          schema:
+            $ref: '#/definitions/Response'
+    delete:
+      tags:
+      - "pedidos"
+      summary: "Eliminar pedido"
+      description: "Eliminar pedido"
+      operationId: "deletePedido"
+      produces:
+      - "application/json"
+      parameters: 
+        - name: "id"
+          in: "path"
+          description: "Id de pedido a eliminar"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "authorization"
+          in: "header"
+          description: "Token de acceso"
+          required: true
+          type: "string"
+          default: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c3VhcmlvIjp7ImlkIjozMSwidXNlcm5hbWUiOiJyb2w1IiwiZnVsbG5hbWUiOiJjYW1iaW8iLCJlbWFpbCI6InJvbDVAeW9wbWFpbC5jb20iLCJ0ZWxlZm9ubyI6IjEyMzY0NTc4OTAiLCJyb2wiOiJBRE1JTiJ9fQ.dUbl3JtSq0o86G84wVvc4luR8Md8rWF9lzO6WduYKqs"
+      responses:
+        "400":
+          description: "Error"
+          schema:
+            $ref: "#/definitions/Response"
+        "200":
+          description: "Eliminado"
+          schema:
+            $ref: "#/definitions/Response"  
+definitions:
+  Usuario:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      fullname: 
+        type: "string"
+      email: 
+        type: "string"
+        format: "email"
+      telefono:
+        type: "string"
+      password:
+        type: "string"
+  UsuarioRes:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      username:
+        type: "string"
+      fullname: 
+        type: "string"
+      email: 
+        type: "string"
+        format: "email"
+      telefono:
+        type: "string"
+      password:
+        type: "string"
+  Pedido:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      usuario_id:
+        type: "integer"
+        format: "int32"
+      direccion:
+        type: "string"
+      pago:
+        type: "integer"
+        format: "float"
+      hora:
+        type: "string"
+        format: "date-time"
+      tipo_pago:
+        type: "integer"
+        format: "int32"
+      estado: 
+        type: "integer"
+        format: "int32"
+      platos:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            plato_id:
+              type: "integer"
+              format: "int32"
+            cantidad:
+              type:  "integer"
+              format: "int32"
+  Plato:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      nombre: 
+        type: "string"
+      precio:
+        type: "integer"
+        format: "float"
+      img:
+        type: "string"
+  Login:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+        format: "password"
+  LoginInfo:
+    type: "object"
+    properties:
+      status:
+        type: "number"
+        format: "int32"
+      ok:
+        type: "boolean"
+      token:
+        type: "string"
+  SignInfo:
+    type: "object"
+    properties:
+      status:
+        type: "number"
+        format: "int32"
+      ok:
+        type: "boolean"
+      message:
+        type: "object"
+        properties:
+          data:
+            $ref: '#/definitions/UsuarioRes'
+          message: 
+            type: "string"
+  Response:
+    type: "object"
+    properties:
+      status:
+        type: "number"
+        format: "int32"
+      ok:
+        type: "boolean"
+      message:
+        type: "string"
+  Favorito:
+    type: "object"
+    properties:
+      usuario_id:
+        type: "integer"
+        format: "int32"
+      plato_id:
+        type: "integer"
+        format: "inte32"
+          
+          
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

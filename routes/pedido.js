@@ -24,14 +24,14 @@ router.post( '/', [ token.checkToken, validate.existPedido, validate.notNullPedi
     res.send( result );
 } );
 
-router.put( '/:id', [ token.checkToken, validate.notNullPedido ], async ( req, res ) => {
+router.put( '/:id', [ token.checkToken , rol.checkAdmin, validate.notNullPedido ], async ( req, res ) => {
     const id = req.params.id;
     const pedido = req.body;
     const result = await pedidoCtrlr.updatePedido( id, pedido );
     res.send( result );
 } );
 
-router.delete( '/:id', token.checkToken, async ( req, res ) => {
+router.delete( '/:id', [ token.checkToken, rol.checkAdmin ], async ( req, res ) => {
     const id = req.params.id;
     const result = await pedidoCtrlr.deletePedido( id );
     res.send( result );

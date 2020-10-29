@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const cors = require( "cors" );
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger.json');
 // const middlewares = require("./middlewares");
+
 
 // import Routes
 const loginRoutes = require( './login' );
@@ -18,5 +21,9 @@ router.use( '/platillos', dishRoutes );
 router.use( '/usuarios', userRoutes );
 router.use( '/login', loginRoutes );
 router.use( '/signin', signinRoutes );
+
+//swagger expose
+router.use('/docs', swaggerUi.serve);
+router.get('/docs', swaggerUi.setup(swaggerDocument));
 
 module.exports = router;

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div style="background-color: red; width: 100%; height: 10vh; text-align: center;"> Header </div>
+    <div style="display: flex;">
+        <div style="background-color: aquamarine; width: 20%; height: 87vh; text-align: center; display: inline-block;"> Menu </div>
+        <div style="background-color: aliceblue; width: 80%; height: 87vh; text-align: center; display: inline-block;" id="container"> swagger </div>
+    </div>
+
+    <script>
+        (function(){
+            let container = document.getElementById('container');
+            try{
+                fetch( 'http:localhost:3000/api/docs' )
+                .then( res => {
+                    console.log(res)
+                    if( res.ok ){
+                        let swage = document.createElement( 'iframe' );
+                        swage.src = res.url;
+                        swage.style = " width: 100%; height: 100%;";
+                        swage.frameBorder = 0;
+                        container.appendChild(swage);
+                    }
+                    return res.text();
+                } )
+                // .then( html => {    
+                //     console.log(html);
+                //     console.log( container );
+                //     let swage = document.createElement( 'iframe' );
+                //     swage.innerHTML = html;
+                //     container.appendChild( swage );
+                // } );
+            } catch ( error ){
+                console.error(error);
+            }
+        })();
+    </script>
+</body>
+</html>
